@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crafts of Cashmere — Handloom &amp; Handicrafts of Kashmir</title>
+  <meta name="description" content="Heirloom pashmina, kaani shawls, walnut wood carving, papier-mâché and hand-knotted carpets — handcrafted in the valley of Kashmir." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <span class="preloader-word">Crafts of Cashmere</span>
+      <span class="preloader-sub">Srinagar · Est. traditions 15th century</span>
+    </div>
+  </div>
+
+  <!-- Grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <div class="nav-left">
+      <div class="nav-menu" id="navMenu">
+        <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="navDropdown">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <span>Menu</span>
+        </button>
+        <div class="nav-dropdown" id="navDropdown" role="menu" aria-label="Site menu">
+          <div class="nav-dd-group">
+            <p class="nav-dd-label">Shop by Craft</p>
+            <a href="shop.html?cat=pashmina" data-cat="pashmina" role="menuitem">Pashmina</a>
+            <a href="shop.html?cat=kaani" data-cat="kaani" role="menuitem">Kaani</a>
+            <a href="shop.html?cat=walnut" data-cat="walnut" role="menuitem">Wood Carving</a>
+            <a href="shop.html?cat=papier" data-cat="papier" role="menuitem">Papier-Mâché</a>
+            <a href="shop.html?cat=carpet" data-cat="carpet" role="menuitem">Carpets</a>
+            <a href="shop.html?cat=crewel" data-cat="crewel" role="menuitem">Crewel &amp; Namda</a>
+          </div>
+          <div class="nav-dd-group">
+            <p class="nav-dd-label">The House</p>
+            <a href="#collections" role="menuitem">Collections</a>
+            <a href="craft.html" role="menuitem">The Craft</a>
+            <a href="craft.html#atelier" role="menuitem">Atelier</a>
+            <a href="shop.html" role="menuitem">The Shop</a>
+          </div>
+        </div>
+      </div>
+      <a href="#top" class="nav-logo">Crafts of Cashmere</a>
+    </div>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#collections">Collections</a>
+      <a href="shop.html">Shop</a>
+      <a href="craft.html">The Craft</a>
+      <a href="craft.html#atelier">Atelier</a>
+    </nav>
+    <button class="nav-cart" id="cartToggle" aria-label="Open cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="hero-media" aria-hidden="true">
+        <img src="images/hero.jpg" alt="" fetchpriority="high" />
+      </div>
+      <div class="blob blob-gold" aria-hidden="true"></div>
+      <div class="blob blob-rose" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow reveal-line">Handloom &amp; Handicrafts of Kashmir</p>
+        <h1 class="hero-title">
+          <span class="hero-line"><span>Woven in</span></span>
+          <span class="hero-line"><span><em>the Valley</em></span></span>
+        </h1>
+        <div class="hero-ornament" aria-hidden="true"></div>
+        <p class="hero-sub reveal-line">Pashmina, kaani, walnut wood &amp; papier-mâché —<br/>five centuries of craft, made by hand in Srinagar.</p>
+        <a href="shop.html" class="hero-cta reveal-line">
+          <span>Enter the Shop</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <p class="hero-assure reveal-line">100% Handmade&ensp;·&ensp;GI-Certified Authentic&ensp;·&ensp;Signed by its Maker</p>
+      </div>
+      <div class="hero-footer">
+        <span>Est. traditions · 15th century</span>
+        <span class="hero-scroll-hint">Scroll</span>
+        <span>Srinagar, Jammu &amp; Kashmir</span>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marqueeTrack">
+        <span>Pashmina</span><i>·</i><span class="mq-hl">100% Handmade</span><i>·</i><span>Kaani</span><i>·</i><span>Papier-Mâché</span><i>·</i><span class="mq-hl">GI-Certified Authentic</span><i>·</i><span>Walnut Carving</span><i>·</i><span>Hand-Knotted Carpets</span><i>·</i><span class="mq-hl">Signed by its Maker</span><i>·</i><span>Crewel Embroidery</span><i>·</i>
+      </div>
+    </div>
+
+    <!-- ============ COLLECTIONS ============ -->
+    <section class="collections" id="collections">
+      <div class="section-head">
+        <p class="section-eyebrow"><span class="se-idx">01</span><span class="se-label">Collections</span><span class="se-meta">34.0837° N — 74.7973° E</span></p>
+        <h2 class="section-title">Six crafts,<br/><em>one valley.</em></h2>
+      </div>
+      <div class="collection-grid" id="collectionGrid"></div>
+    </section>
+
+    <!-- ============ ASSURANCE ============ -->
+    <section class="assurance" aria-label="Our assurances">
+      <p class="assurance-statement">Nothing here is machine-made.<br/><em>Nothing ever will be.</em></p>
+      <div class="assurance-inner">
+        <div class="assurance-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="10" r="6"/><path d="M12 7v3l2 1.5"/><path d="M8.5 15.5 7 21l5-2.5L17 21l-1.5-5.5"/></svg>
+          <h3>GI-Certified Authenticity</h3>
+          <p>Every pashmina carries the Kashmir Geographical Indication mark — hand-tested for fibre, weave and origin.</p>
+        </div>
+        <div class="assurance-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M7 5v14M10 5v14M13 5v14M16 5v14M4 9.5h16M4 14.5h16"/></svg>
+          <h3>Handmade, Start to Finish</h3>
+          <p>Spun, woven, carved and painted entirely by hand in 42 family ateliers — every piece is signed by its maker.</p>
+        </div>
+        <div class="assurance-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+          <h3>Insured Worldwide Shipping</h3>
+          <p>Complimentary, fully insured delivery to your door — wrapped in archival tissue, anywhere in the world.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEWSLETTER ============ -->
+    <section class="newsletter">
+      <div class="newsletter-inner">
+        <h2 class="section-title">Letters from<br/><em>the valley.</em></h2>
+        <p>New arrivals, artisan stories and atelier notes. Once a month, never more.</p>
+        <form class="newsletter-form" id="newsletterForm">
+          <label class="visually-hidden" for="nlEmail">Email address</label>
+          <input type="email" id="nlEmail" placeholder="Your email address" required />
+          <button type="submit">Subscribe</button>
+        </form>
+        <p class="newsletter-done" id="newsletterDone">Thank you — see you in your inbox soon.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <span class="footer-logo">Crafts of Cashmere</span>
+      <div class="footer-cols">
+        <div><h4>Shop</h4><a href="shop.html?cat=pashmina">Pashmina</a><a href="shop.html?cat=kaani">Kaani</a><a href="shop.html?cat=walnut">Wood Carving</a><a href="shop.html?cat=carpet">Carpets</a></div>
+        <div><h4>House</h4><a href="craft.html">The Craft</a><a href="craft.html#atelier">Atelier</a><a href="index.html#collections">Collections</a></div>
+        <div><h4>Care</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Authenticity</a><a href="/admin">Atelier Admin</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Crafts of Cashmere · Handcrafted in the valley of Kashmir</span>
+      <span>GI-certified pashmina · Fair-trade ateliers</span>
+    </div>
+  </footer>
+
+  <!-- ============ CART DRAWER ============ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-head">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div>
+      <button class="cart-checkout" id="cartCheckout">Proceed to Checkout</button>
+      <p class="cart-note">Complimentary insured shipping worldwide</p>
+    </div>
+  </aside>
+
+  <!-- ============ CHECKOUT ============ -->
+  <div class="co-overlay" id="coOverlay"></div>
+  <aside class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-label="Checkout">
+    <div class="co-head">
+      <h3>Checkout</h3>
+      <button class="co-close" id="coClose" aria-label="Close checkout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <form class="co-form" id="coForm">
+      <label for="coName">Full name</label>
+      <input id="coName" required maxlength="120" autocomplete="name" />
+      <label for="coEmail">Email</label>
+      <input id="coEmail" type="email" required maxlength="200" autocomplete="email" />
+      <label for="coAddress">Delivery address</label>
+      <textarea id="coAddress" rows="3" required maxlength="600" autocomplete="street-address"></textarea>
+      <div class="co-summary" id="coSummary"></div>
+      <button type="submit" class="co-place" id="coPlace">Place Order</button>
+      <p class="co-note">Complimentary insured shipping · every piece GI-certified authentic</p>
+    </form>
+  </aside>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous"></script>
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier Admin — Crafts of Cashmere</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- Login gate -->
+  <div class="login" id="loginView">
+    <form class="login-card" id="loginForm">
+      <p class="login-eyebrow">Crafts of Cashmere</p>
+      <h1>Atelier Admin</h1>
+      <label for="loginKey">Admin key</label>
+      <input type="password" id="loginKey" autocomplete="current-password" required />
+      <button type="submit">Enter the Atelier</button>
+      <p class="login-error" id="loginError">That key is not recognised.</p>
+    </form>
+  </div>
+
+  <!-- App -->
+  <div class="app" id="appView" hidden>
+    <header class="topbar">
+      <div>
+        <span class="topbar-logo">Crafts of Cashmere</span>
+        <span class="topbar-sub">Atelier Admin</span>
+      </div>
+      <nav class="topbar-tabs" id="mainTabs">
+        <button class="on" data-view="products">Products</button>
+        <button data-view="orders">Orders</button>
+        <button data-view="subscribers">Letters</button>
+      </nav>
+      <div class="topbar-actions">
+        <a href="/" target="_blank" rel="noopener">View site ↗</a>
+        <button id="logoutBtn">Sign out</button>
+      </div>
+    </header>
+
+    <!-- Products view -->
+    <main class="view" id="view-products">
+      <div class="view-head">
+        <div class="cat-tabs" id="catTabs"></div>
+        <button class="btn-primary" id="addItemBtn">+ Add piece</button>
+      </div>
+      <div class="item-list" id="itemList"></div>
+    </main>
+
+    <!-- Orders view -->
+    <main class="view" id="view-orders" hidden>
+      <h2 class="view-title">Orders</h2>
+      <div class="table-wrap" id="ordersTable"></div>
+    </main>
+
+    <!-- Subscribers view -->
+    <main class="view" id="view-subscribers" hidden>
+      <h2 class="view-title">Letters from the valley — subscribers</h2>
+      <div class="table-wrap" id="subsTable"></div>
+    </main>
+  </div>
+
+  <!-- Editor drawer -->
+  <div class="editor-overlay" id="editorOverlay"></div>
+  <aside class="editor" id="editor" aria-label="Edit piece">
+    <div class="editor-head">
+      <h3 id="editorTitle">Edit piece</h3>
+      <button class="editor-close" id="editorClose" aria-label="Close editor">✕</button>
+    </div>
+    <form class="editor-form" id="editorForm">
+      <div class="editor-media">
+        <div class="editor-preview" id="editorPreview"></div>
+        <div class="editor-media-controls">
+          <label class="btn-ghost" for="photoInput">Upload photo</label>
+          <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden />
+          <label for="motifSelect">or use motif artwork</label>
+          <select id="motifSelect">
+            <option value="">— none —</option>
+            <option value="paisley">Paisley</option>
+            <option value="vineBloom">Vine &amp; Bloom</option>
+            <option value="chinarLeaf">Chinar Leaf</option>
+            <option value="boxRosette">Box Rosette</option>
+            <option value="medallion">Medallion</option>
+            <option value="latticeJali">Lattice Jali</option>
+          </select>
+        </div>
+      </div>
+      <label for="fName">Name</label>
+      <input id="fName" required maxlength="120" />
+      <label for="fMaker">Maker</label>
+      <input id="fMaker" maxlength="120" placeholder="Woven by …" />
+      <div class="editor-row">
+        <div>
+          <label for="fPrice">Price (₹)</label>
+          <input id="fPrice" type="number" min="0" step="100" required />
+        </div>
+        <div>
+          <label for="fBadge">Badge</label>
+          <input id="fBadge" maxlength="40" placeholder="GI Certified" />
+        </div>
+      </div>
+      <label for="fDesc">Description</label>
+      <textarea id="fDesc" rows="5" maxlength="2000" placeholder="The story of this piece — fibre, hands, time…"></textarea>
+      <label for="fAlt">Photo alt text</label>
+      <input id="fAlt" maxlength="300" placeholder="What the photo shows" />
+      <div class="editor-actions">
+        <button type="submit" class="btn-primary" id="saveBtn">Save piece</button>
+        <button type="button" class="btn-danger" id="deleteBtn">Delete</button>
+      </div>
+      <p class="editor-status" id="editorStatus"></p>
+    </form>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

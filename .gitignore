@@ -1,0 +1,17 @@
+# secrets
+certs/
+.env
+*.key
+*.pem
+
+# runtime data — orders and subscribers contain customer details;
+# the catalog re-seeds itself when missing
+data/
+images/uploads/
+*.tmp
+
+# local tooling and OS files
+.claude/
+.claude-flow/
+.DS_Store
+node_modules/

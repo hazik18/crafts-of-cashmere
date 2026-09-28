@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Craft — Crafts of Cashmere</title>
+  <meta name="description" content="The fibre, the loom, the hand — how five centuries of Kashmiri craft are still made entirely by hand in the ateliers of Srinagar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="subpage">
+
+  <!-- Grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav scrolled" id="nav" data-solid="1">
+    <div class="nav-left">
+      <div class="nav-menu" id="navMenu">
+        <button class="nav-menu-btn" id="navMenuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="navDropdown">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <span>Menu</span>
+        </button>
+        <div class="nav-dropdown" id="navDropdown" role="menu" aria-label="Site menu">
+          <div class="nav-dd-group">
+            <p class="nav-dd-label">Shop by Craft</p>
+            <a href="shop.html?cat=pashmina" data-cat="pashmina" role="menuitem">Pashmina</a>
+            <a href="shop.html?cat=kaani" data-cat="kaani" role="menuitem">Kaani</a>
+            <a href="shop.html?cat=walnut" data-cat="walnut" role="menuitem">Wood Carving</a>
+            <a href="shop.html?cat=papier" data-cat="papier" role="menuitem">Papier-Mâché</a>
+            <a href="shop.html?cat=carpet" data-cat="carpet" role="menuitem">Carpets</a>
+            <a href="shop.html?cat=crewel" data-cat="crewel" role="menuitem">Crewel &amp; Namda</a>
+          </div>
+          <div class="nav-dd-group">
+            <p class="nav-dd-label">The House</p>
+            <a href="index.html#collections" role="menuitem">Collections</a>
+            <a href="craft.html" role="menuitem">The Craft</a>
+            <a href="#atelier" role="menuitem">Atelier</a>
+            <a href="index.html" role="menuitem">Home</a>
+          </div>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">Crafts of Cashmere</a>
+    </div>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html#collections">Collections</a>
+      <a href="shop.html">Shop</a>
+      <a href="craft.html" aria-current="page">The Craft</a>
+      <a href="#atelier">Atelier</a>
+    </nav>
+    <button class="nav-cart" id="cartToggle" aria-label="Open cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ CRAFT STORY ============ -->
+    <section class="craft" id="craft">
+      <div class="section-head page-head">
+        <p class="section-eyebrow"><span class="se-idx">01</span><span class="se-label">The Craft</span><span class="se-meta">Process — 03 stages</span></p>
+        <h2 class="section-title">Slow by<br/><em>design.</em></h2>
+      </div>
+      <div class="craft-rows">
+        <div class="craft-row">
+          <div class="craft-num">01</div>
+          <div class="craft-text">
+            <h3>The fibre</h3>
+            <p>True pashmina begins 14,000 feet up, in the undercoat of the Changthangi goat. Each animal yields barely 80 grams a year — combed, never sheared, every spring.</p>
+          </div>
+          <div class="craft-stat"><strong>14–16µ</strong><span>fibre fineness</span></div>
+        </div>
+        <div class="craft-row">
+          <div class="craft-num">02</div>
+          <div class="craft-text">
+            <h3>The loom</h3>
+            <p>Hand-spun on the yinder wheel and woven on wooden looms unchanged for generations. A kaani shawl grows a few centimetres a day, following a coded pattern called the talim.</p>
+          </div>
+          <div class="craft-stat"><strong>18 mo</strong><span>for one kaani shawl</span></div>
+        </div>
+        <div class="craft-row">
+          <div class="craft-num">03</div>
+          <div class="craft-text">
+            <h3>The hand</h3>
+            <p>Walnut carved with hand chisels, papier-mâché painted with squirrel-hair brushes, carpets knotted one thread at a time. No two pieces are ever the same — by intention.</p>
+          </div>
+          <div class="craft-stat"><strong>900+</strong><span>knots per sq. inch</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERLUDE ============ -->
+    <section class="interlude">
+      <img src="images/dal-lake.jpg" alt="Wooden houseboat on Dal Lake beneath snow-covered mountains, Srinagar" loading="lazy" />
+      <p class="interlude-caption">Dal Lake, Srinagar — where every piece begins</p>
+    </section>
+
+    <!-- ============ QUOTE / ATELIER ============ -->
+    <section class="atelier" id="atelier">
+      <div class="blob blob-atelier" aria-hidden="true"></div>
+      <svg class="atelier-paisley" viewBox="0 0 300 400" aria-hidden="true">
+        <path d="M150 70 C215 105 225 195 178 255 C150 290 105 285 92 250 C80 216 102 182 135 188 C158 192 168 216 152 232" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      </svg>
+      <div class="atelier-inner">
+        <svg class="atelier-motif" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 8 C74 22 78 52 60 70 C50 80 36 78 32 66 C28 55 36 44 47 46 C54 47 57 55 52 60" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <blockquote class="atelier-quote">
+          <span class="q-line">“Every shawl remembers</span>
+          <span class="q-line">the hands that made it.”</span>
+        </blockquote>
+        <p class="atelier-credit">— Ghulam Nabi, master weaver, fourth generation · Kanihama village</p>
+        <p class="atelier-body">We work directly with 42 artisan families across the valley. Every piece carries the name of its maker, and every purchase returns to the workshop that made it.</p>
+        <a href="shop.html" class="atelier-cta">
+          <span>Shop their work</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <span class="footer-logo">Crafts of Cashmere</span>
+      <div class="footer-cols">
+        <div><h4>Shop</h4><a href="shop.html?cat=pashmina">Pashmina</a><a href="shop.html?cat=kaani">Kaani</a><a href="shop.html?cat=walnut">Wood Carving</a><a href="shop.html?cat=carpet">Carpets</a></div>
+        <div><h4>House</h4><a href="craft.html">The Craft</a><a href="craft.html#atelier">Atelier</a><a href="index.html#collections">Collections</a></div>
+        <div><h4>Care</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Authenticity</a><a href="/admin">Atelier Admin</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Crafts of Cashmere · Handcrafted in the valley of Kashmir</span>
+      <span>GI-certified pashmina · Fair-trade ateliers</span>
+    </div>
+  </footer>
+
+  <!-- ============ CART DRAWER ============ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-head">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div>
+      <button class="cart-checkout" id="cartCheckout">Proceed to Checkout</button>
+      <p class="cart-note">Complimentary insured shipping worldwide</p>
+    </div>
+  </aside>
+
+  <!-- ============ CHECKOUT ============ -->
+  <div class="co-overlay" id="coOverlay"></div>
+  <aside class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-label="Checkout">
+    <div class="co-head">
+      <h3>Checkout</h3>
+      <button class="co-close" id="coClose" aria-label="Close checkout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <form class="co-form" id="coForm">
+      <label for="coName">Full name</label>
+      <input id="coName" required maxlength="120" autocomplete="name" />
+      <label for="coEmail">Email</label>
+      <input id="coEmail" type="email" required maxlength="200" autocomplete="email" />
+      <label for="coAddress">Delivery address</label>
+      <textarea id="coAddress" rows="3" required maxlength="600" autocomplete="street-address"></textarea>
+      <div class="co-summary" id="coSummary"></div>
+      <button type="submit" class="co-place" id="coPlace">Place Order</button>
+      <p class="co-note">Complimentary insured shipping · every piece GI-certified authentic</p>
+    </form>
+  </aside>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous"></script>
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
