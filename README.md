@@ -1,60 +1,95 @@
 # Crafts of Cashmere
 
-E-commerce site for handmade Kashmiri crafts — pashmina and kaani shawls,
-walnut wood carving, papier-mâché, hand-knotted carpets and crewel embroidery —
-with a Node backend and an admin panel for managing the catalog.
+E-commerce platform and digital atelier for authentic handmade Kashmiri crafts — pashmina and kaani shawls, walnut wood carving, papier-mâché, hand-knotted carpets and crewel embroidery.
 
-## Run
+Migrated to a decoupled modern architecture:
+- **Frontend**: React 19 + TypeScript, Vite, React Router, GSAP, Lenis
+- **Backend**: Node.js + TypeScript, Express, Helmet, CORS, atomic file persistence
 
-Requires Node.js 18+. There are no npm dependencies to install.
+---
+
+## Getting Started
+
+### 1. Backend Server
+```bash
+cd backend
+npm.cmd install        # first time
+npm.cmd run dev        # runs on http://localhost:4173
+```
+- API Base URL: `http://localhost:4173/api`
+- Default Admin Key: `cashmere-admin` (override with `ADMIN_KEY` environment variable)
+
+### 2. Frontend Application
+```bash
+cd frontend
+npm.cmd install        # first time
+npm.cmd run dev        # runs on http://localhost:5173
+```
+- Storefront Home: `http://localhost:5173/`
+- Shop Catalog: `http://localhost:5173/shop`
+- Craft Story: `http://localhost:5173/craft`
+- Atelier Admin Panel: `http://localhost:5173/admin`
+
+---
+
+## Project Structure
+
+```
+crafts-of-cashmere/
+├── backend/
+│   ├── data/                 # JSON persistence (catalog, orders, subscribers)
+│   ├── uploads/              # Local image uploads directory
+│   ├── src/
+│   │   ├── types/            # TypeScript domain interfaces
+│   │   ├── repositories/     # Persistence layer with atomic write queues
+│   │   ├── services/         # Storage service interface (local / cloud-ready)
+│   │   ├── middleware/       # Constant-time auth & rate limiters
+│   │   ├── validators/       # Request sanitizers & field bounds
+│   │   ├── controllers/      # Catalog, Order, Subscriber, Auth, Upload
+│   │   ├── routes/           # REST API routes
+│   │   ├── app.ts            # Express setup with Helmet & CORS
+│   │   └── server.ts         # Server entry point
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── frontend/
+│   ├── public/
+│   │   └── images/           # High-resolution craft photography
+│   ├── src/
+│   │   ├── app/              # Router & application setup
+│   │   ├── components/       # Navbar, Footer, Preloader, Grain, ScrollProgress
+│   │   ├── features/
+│   │   │   ├── cart/         # CartContext (localStorage) & CartDrawer
+│   │   │   ├── checkout/     # CheckoutModal with backend order submission
+│   │   │   └── products/     # 6 parametric SVG motifs, ProductCard, ProductDetailModal
+│   │   ├── hooks/            # useLenis (kinetic smooth scrolling & ScrollTrigger)
+│   │   ├── services/         # Typed API client
+│   │   ├── styles/           # Preserved CSS design system
+│   │   └── pages/
+│   │       ├── HomePage.tsx  # Hero reveals, marquee, 6-craft collection grid
+│   │       ├── ShopPage.tsx  # Filter tabs, URL query sync, 120-piece product grid
+│   │       ├── CraftPage.tsx # Process narrative, Dal Lake parallax, quote
+│   │       └── AdminPage.tsx # Password login, catalog CRUD, orders & letters
+│   ├── package.json
+│   ├── vite.config.ts        # Dev server proxying /api to backend
+│   └── tsconfig.json
+│
+├── crafts_of_cashmere_analysis.md # Comprehensive architectural analysis
+├── Plan.md                        # Migration specification
+├── BUSINESS-PLAN.md               # Unit economics, logistics & go-to-market plan
+└── SECURITY.md                    # Threat model & security mitigations
+```
+
+---
+
+## Production Build
 
 ```bash
-ADMIN_KEY='choose-a-long-random-key' node server.js
+# Build backend
+cd backend
+npm.cmd run build
+
+# Build frontend
+cd ../frontend
+npm.cmd run build
 ```
-
-- Site: http://localhost:4173
-- Admin panel: http://localhost:4173/admin (sign in with your `ADMIN_KEY`;
-  it falls back to `cashmere-admin` when unset — never deploy with the default)
-
-On first run the server seeds `data/catalog.json` with 120 pieces (six crafts ×
-20). Admin edits, orders and newsletter signups are saved under `data/`, and
-uploaded photos under `images/uploads/`. Both folders are git-ignored: they are
-runtime data, and orders contain customer details.
-
-Serving the folder with a plain static server still shows the storefront, but
-checkout, newsletter signup and the admin panel need `server.js`.
-
-## Pages
-
-| Page | Contents |
-|---|---|
-| `index.html` | Home: hero, collections, authenticity statement, newsletter |
-| `shop.html` | Tabbed catalog; `shop.html?cat=carpet` opens a craft directly |
-| `craft.html` | The making process, Dal Lake interlude, atelier story |
-| `admin.html` | Catalog editing with photo upload, orders, subscribers |
-
-## Structure
-
-```
-server.js          HTTP server, JSON API, uploads, security headers, optional TLS
-js/products.js     fallback catalog generator and SVG motif artwork
-js/main.js         storefront: nav, cart, checkout, shop tabs, animations
-js/admin.js        admin panel
-css/style.css      storefront design system
-css/admin.css      admin panel styles
-images/            photography (Unsplash, free license)
-```
-
-`js/three-scene.js` is an unused earlier 3D hero, kept for reference.
-
-## HTTPS
-
-Put `server.key` and `server.crt` in `certs/` (or set `HTTPS_KEY` /
-`HTTPS_CERT`) and an HTTPS listener starts on port 4174. For production, put
-the app behind a reverse proxy with a CA-issued certificate instead — see
-[SECURITY.md](SECURITY.md).
-
-## Further reading
-
-- [SECURITY.md](SECURITY.md) — threat model, protections, production checklist
-- [BUSINESS-PLAN.md](BUSINESS-PLAN.md) — hosting, payments and go-to-market plan

@@ -4,14 +4,25 @@ certs/
 *.key
 *.pem
 
-# runtime data — orders and subscribers contain customer details;
-# the catalog re-seeds itself when missing
-data/
-images/uploads/
+# dependencies and build outputs
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+frontend/node_modules/
+frontend/feature-plans/
+Plan.md
+crafts_of_cashmere_analysis.md
+SECURITY.md
+
+# runtime data
+backend/data/orders.json
+backend/data/subscribers.json
+backend/uploads/
 *.tmp
 
 # local tooling and OS files
 .claude/
 .claude-flow/
 .DS_Store
-node_modules/
+Thumbs.db
