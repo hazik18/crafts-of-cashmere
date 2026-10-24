@@ -10,7 +10,7 @@ node_modules/
 dist/
 **/dist/
 frontend/node_modules/
-frontend/feature-plans/
+feature-plans/
 Plan.md
 crafts_of_cashmere_analysis.md
 SECURITY.md
