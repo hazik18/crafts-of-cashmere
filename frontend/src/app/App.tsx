@@ -34,12 +34,17 @@ const ScrollToHash: React.FC = () => {
 };
 
 const AppContent: React.FC = () => {
-  useLenis();
+  const { pathname } = useLocation();
+
+  // Lenis hijacks wheel/touch events on window, which breaks native scrolling
+  // inside panels (e.g. the admin editor drawer). The admin dashboard doesn't
+  // use scroll animations, so keep smooth scrolling to the storefront only.
+  useLenis(!pathname.startsWith('/admin'));
 
   return (
     <>
       <ScrollToHash />
-      <Grain />
+      {!pathname.startsWith('/admin') && <Grain />}
       <ScrollProgress />
       <WishlistDrawer />
       <CartDrawer />

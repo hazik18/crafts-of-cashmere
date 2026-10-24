@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 
 export interface IStorageService {
   saveImage(dataUrl: string, originalFilename?: string): Promise<{ path: string }>;
+  saveImages(items: Array<{ data: string; filename?: string }>): Promise<{ paths: string[] }>;
 }
 
 export class LocalStorageService implements IStorageService {
@@ -61,6 +62,18 @@ export class LocalStorageService implements IStorageService {
     await fsp.writeFile(destination, buffer);
 
     return { path: `images/uploads/${filename}` };
+  }
+
+  public async saveImages(
+    items: Array<{ data: string; filename?: string }>
+  ): Promise<{ paths: string[] }> {
+    if (!items.length) return { paths: [] };
+    if (items.length > 20) throw new Error('max 20 images per batch');
+
+    const results = await Promise.all(
+      items.map((item) => this.saveImage(item.data, item.filename || 'photo'))
+    );
+    return { paths: results.map((r) => r.path) };
   }
 }
 

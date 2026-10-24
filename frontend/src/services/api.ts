@@ -104,4 +104,15 @@ export const api = {
       body: JSON.stringify({ data: dataUrl, filename }),
     });
   },
+
+  async uploadBatch(
+    images: Array<{ data: string; filename: string }>,
+    adminKey: string
+  ): Promise<{ ok: boolean; paths: string[] }> {
+    return request<{ ok: boolean; paths: string[] }>('/api/upload/batch', {
+      method: 'POST',
+      headers: { 'X-Admin-Key': adminKey },
+      body: JSON.stringify({ images }),
+    });
+  },
 };

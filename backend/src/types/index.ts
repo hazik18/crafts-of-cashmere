@@ -13,6 +13,9 @@ export interface Product {
   alt: string;
   motif: MotifType | null;
   desc?: string;
+  images?: string[];      // ordered gallery of additional photo paths
+  stock?: number;         // 1 = single piece heirloom, 0 = woven to order
+  leadTimeWeeks?: number; // used when stock === 0
 }
 
 export interface CategoryCatalog {
@@ -59,6 +62,9 @@ export interface CreateProductDTO {
   alt?: string;
   motif?: MotifType | null;
   desc?: string;
+  images?: string[];
+  stock?: number;
+  leadTimeWeeks?: number;
 }
 
 export interface UpdateProductDTO {
@@ -70,4 +76,7 @@ export interface UpdateProductDTO {
   alt?: string;
   motif?: MotifType | null;
   desc?: string;
+  images?: string[];
+  stock?: number;
+  leadTimeWeeks?: number;
 }

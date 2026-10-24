@@ -78,5 +78,32 @@ export function sanitizeProductFields(body: Record<string, unknown>): Partial<Pr
     out.img = null;
   }
 
+  // Gallery images — ordered array of validated paths
+  if (Array.isArray(body.images)) {
+    const safe = (body.images as unknown[])
+      .filter((p): p is string => typeof p === 'string')
+      .map((p) => p.trim())
+      .filter((p) => /^images\/[\w./-]+$/.test(p) && !p.includes('..'));
+    out.images = safe;
+  }
+
+  if (body.images === null || body.images === undefined) {
+    // leave untouched — only update when explicitly provided
+  }
+
+  if (body.stock !== undefined) {
+    const s = Number(body.stock);
+    if (Number.isFinite(s) && s >= 0) {
+      out.stock = Math.floor(s);
+    }
+  }
+
+  if (body.leadTimeWeeks !== undefined) {
+    const lt = Number(body.leadTimeWeeks);
+    if (Number.isFinite(lt) && lt > 0) {
+      out.leadTimeWeeks = Math.floor(lt);
+    }
+  }
+
   return out;
 }

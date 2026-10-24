@@ -9,10 +9,14 @@
         "maker": "Woven by Fatima Bano",
         "badge": "GI Certified",
         "price": 9200,
-        "img": "images/uploads/mvc7jq303ff2e5-guts-black-3840x2160-21420.png",
+        "img": "images/uploads/mvm4riom47e81d-guts-black-3840x2160-21420.png",
         "alt": "Woman wearing a red and black patterned shawl",
         "motif": null,
-        "desc": "Heirloom Ring Shawl is hand-spun from the winter undercoat of the Changthangi goat and woven thread by thread on a wooden loom in Srinagar. Weeks on the loom; a lifetime in the wardrobe."
+        "desc": "Heirloom Ring Shawl is hand-spun from the winter undercoat of the Changthangi goat and woven thread by thread on a wooden loom in Srinagar. Weeks on the loom; a lifetime in the wardrobe.",
+        "images": [
+          "images/uploads/mvm4riom8c2a9a-son-goku-silhouette-11520x6480-17760.png",
+          "images/uploads/mvm4riomc13732-download-2-.jpg"
+        ]
       },
       {
         "id": "pashmina-02",

@@ -38,6 +38,9 @@ export class CatalogController {
       alt: fields.alt || fields.name,
       motif: fields.img ? null : (fields.motif || 'paisley'),
       desc: fields.desc || '',
+      images: fields.images ?? [],
+      stock: fields.stock,
+      leadTimeWeeks: fields.leadTimeWeeks,
     };
 
     try {

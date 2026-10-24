@@ -24,5 +24,6 @@ router.post('/products', CatalogController.createProduct);
 router.put('/products/:id', CatalogController.updateProduct);
 router.delete('/products/:id', CatalogController.deleteProduct);
 router.post('/upload', UploadController.upload);
+router.post('/upload/batch', UploadController.uploadBatch);
 
 export default router;
