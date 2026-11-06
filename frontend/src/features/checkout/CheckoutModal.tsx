@@ -53,6 +53,8 @@ export const CheckoutModal: React.FC = () => {
         role="dialog"
         aria-modal="true"
         aria-label="Checkout"
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
       >
         <div className="co-head">
           <h3>Checkout</h3>
@@ -79,6 +81,7 @@ export const CheckoutModal: React.FC = () => {
           <label htmlFor="coName">Full name</label>
           <input
             id="coName"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -89,6 +92,7 @@ export const CheckoutModal: React.FC = () => {
           <label htmlFor="coEmail">Email</label>
           <input
             id="coEmail"
+            name="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -100,6 +104,7 @@ export const CheckoutModal: React.FC = () => {
           <label htmlFor="coAddress">Delivery address</label>
           <textarea
             id="coAddress"
+            name="address"
             rows={3}
             value={address}
             onChange={(e) => setAddress(e.target.value)}

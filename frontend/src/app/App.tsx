@@ -13,6 +13,10 @@ import { HomePage } from '../pages/HomePage';
 import { ShopPage } from '../pages/ShopPage';
 import { CraftPage } from '../pages/CraftPage';
 import { AdminPage } from '../pages/AdminPage';
+import { ShippingPage } from '../pages/policies/ShippingPage';
+import { ReturnsPage } from '../pages/policies/ReturnsPage';
+import { AuthenticityPage } from '../pages/policies/AuthenticityPage';
+import { ContactPage } from '../pages/policies/ContactPage';
 import { useLenis } from '../hooks/useLenis';
 import '../styles/style.css';
 
@@ -55,6 +59,12 @@ const AppContent: React.FC = () => {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/craft" element={<CraftPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/shipping" element={<ShippingPage />} />
+        <Route path="/shipping-policy" element={<ShippingPage />} />
+        <Route path="/returns" element={<ReturnsPage />} />
+        <Route path="/returns-policy" element={<ReturnsPage />} />
+        <Route path="/authenticity" element={<AuthenticityPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </>

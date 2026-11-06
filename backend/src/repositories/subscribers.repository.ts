@@ -4,7 +4,15 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { Subscriber } from '../types/index.js';
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const resolveDataDir = (): string => {
+  const inBackend = path.resolve(process.cwd(), 'backend', 'data');
+  if (fs.existsSync(inBackend)) {
+    return inBackend;
+  }
+  return path.resolve(process.cwd(), 'data');
+};
+
+const DATA_DIR = resolveDataDir();
 const SUBS_FILE = path.join(DATA_DIR, 'subscribers.json');
 
 const writeQueues = new Map<string, Promise<void>>();

@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Product, CraftCategory } from '../../types';
+import { Product, PaginationInfo, AvailableBadge } from '../../types';
+import { api } from '../../services/api';
 
 export type PriceBracketId = 'all' | 'under-5k' | '5k-20k' | '20k-70k' | 'above-70k' | 'custom';
 export type SortOptionId = 'curated' | 'price_asc' | 'price_desc' | 'name_asc' | 'maker_asc';
@@ -28,7 +29,30 @@ export const SORT_OPTIONS: { id: SortOptionId; label: string }[] = [
   { id: 'maker_asc', label: 'Artisan Name (A–Z)' },
 ];
 
-export const useProductFilters = (products: Product[]) => {
+/**
+ * Automatically computes the optimal items-per-page based on screen size:
+ * - Mobile Phones (< 640px, 1 column): 6 pieces
+ * - Tablets / Small Screens (640px – 1099px, 2 columns): 8 pieces
+ * - Monitors / Desktops (>= 1100px, 4 columns): 12 pieces
+ */
+function getResponsivePageLimit(): number {
+  if (typeof window === 'undefined') return 12;
+  const width = window.innerWidth;
+  if (width < 640) return 6;
+  if (width < 1100) return 8;
+  return 12;
+}
+
+const DEFAULT_PAGINATION: PaginationInfo = {
+  page: 1,
+  limit: 12,
+  totalItems: 0,
+  totalPages: 1,
+  hasNext: false,
+  hasPrev: false,
+};
+
+export const useProductFilters = (_initialProducts?: Product[]) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Read URL params
@@ -39,6 +63,7 @@ export const useProductFilters = (products: Product[]) => {
   const paramBadges = searchParams.get('badges') ? searchParams.get('badges')!.split(',').filter(Boolean) : [];
   const paramMin = searchParams.get('min') ? Number(searchParams.get('min')) : null;
   const paramMax = searchParams.get('max') ? Number(searchParams.get('max')) : null;
+  const paramPage = parseInt(searchParams.get('page') || '1', 10) || 1;
 
   // Local state initialized with URL params
   const [activeCat, setActiveCatState] = useState<string>(paramCat);
@@ -48,8 +73,24 @@ export const useProductFilters = (products: Product[]) => {
   const [selectedBadges, setSelectedBadgesState] = useState<string[]>(paramBadges);
   const [priceMin, setPriceMinState] = useState<number | null>(paramMin);
   const [priceMax, setPriceMaxState] = useState<number | null>(paramMax);
+  const [page, setPageState] = useState<number>(paramPage);
 
-  // Sync state if URL changes externally (e.g. back button)
+  // Dynamic limit driven exclusively by viewport screen size
+  const [limit, setLimitState] = useState<number>(getResponsivePageLimit);
+
+  // Server-side response state
+  const [serverProducts, setServerProducts] = useState<Product[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    ...DEFAULT_PAGINATION,
+    page: paramPage,
+    limit,
+  });
+  const [availableBadges, setAvailableBadges] = useState<AvailableBadge[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [filteredCount, setFilteredCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Sync state if URL changes externally (e.g. back/forward navigation)
   useEffect(() => {
     setActiveCatState(paramCat);
     setSearchQueryState(paramQuery);
@@ -58,7 +99,26 @@ export const useProductFilters = (products: Product[]) => {
     setSelectedBadgesState(paramBadges);
     setPriceMinState(paramMin);
     setPriceMaxState(paramMax);
+    setPageState(paramPage);
   }, [searchParams]);
+
+  // Screen resize listener to auto-adjust items per page without user intervention
+  useEffect(() => {
+    let timeoutId: number;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        const nextLimit = getResponsivePageLimit();
+        setLimitState((prev) => (prev !== nextLimit ? nextLimit : prev));
+      }, 150);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   // Push updates to URL query string
   const updateURL = useCallback(
@@ -70,6 +130,7 @@ export const useProductFilters = (products: Product[]) => {
       badges?: string[];
       min?: number | null;
       max?: number | null;
+      page?: number;
     }) => {
       const nextParams = new URLSearchParams(searchParams);
 
@@ -80,6 +141,7 @@ export const useProductFilters = (products: Product[]) => {
       const nextBadges = updates.badges !== undefined ? updates.badges : selectedBadges;
       const nextMin = updates.min !== undefined ? updates.min : priceMin;
       const nextMax = updates.max !== undefined ? updates.max : priceMax;
+      const nextPage = updates.page !== undefined ? updates.page : 1; // Default to page 1 on filter changes
 
       if (nextCat) nextParams.set('cat', nextCat);
       else nextParams.delete('cat');
@@ -102,38 +164,83 @@ export const useProductFilters = (products: Product[]) => {
       if (nextMax !== null && !isNaN(nextMax)) nextParams.set('max', String(nextMax));
       else nextParams.delete('max');
 
+      if (nextPage > 1) nextParams.set('page', String(nextPage));
+      else nextParams.delete('page');
+
+      // Keep URL clean — remove limit from search params
+      nextParams.delete('limit');
+
       setSearchParams(nextParams, { replace: true });
     },
     [searchParams, setSearchParams, activeCat, searchQuery, sortBy, priceBracket, selectedBadges, priceMin, priceMax]
   );
 
-  // Handlers
+  // Fetch paginated products from server
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoading(true);
+
+    api.getProducts({
+      page,
+      limit,
+      cat: activeCat,
+      q: searchQuery,
+      sort: sortBy,
+      badges: selectedBadges,
+      min: priceMin,
+      max: priceMax,
+    })
+      .then((res) => {
+        if (cancelled) return;
+        setServerProducts(res.products);
+        setPagination(res.pagination);
+        setAvailableBadges(res.availableBadges);
+        setFilteredCount(res.filteredCount);
+        setTotalCount(res.totalCount);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error('Failed to load server paginated products:', err);
+        setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCat, searchQuery, sortBy, selectedBadges, priceMin, priceMax, page, limit]);
+
+  // Handlers — all filter changes automatically reset page to 1
   const setActiveCat = (cat: string) => {
     setActiveCatState(cat);
-    updateURL({ cat });
+    setPageState(1);
+    updateURL({ cat, page: 1 });
   };
 
   const setSearchQuery = (q: string) => {
     setSearchQueryState(q);
-    updateURL({ q });
+    setPageState(1);
+    updateURL({ q, page: 1 });
   };
 
   const setSortBy = (sort: SortOptionId) => {
     setSortByState(sort);
-    updateURL({ sort });
+    setPageState(1);
+    updateURL({ sort, page: 1 });
   };
 
   const setPriceBracket = (bracket: PriceBracketId) => {
     setPriceBracketState(bracket);
+    setPageState(1);
     if (bracket !== 'custom') {
       const found = PRICE_BRACKETS.find((b) => b.id === bracket);
       const min = found ? found.min : null;
       const max = found ? found.max : null;
       setPriceMinState(min);
       setPriceMaxState(max);
-      updateURL({ bracket, min, max });
+      updateURL({ bracket, min, max, page: 1 });
     } else {
-      updateURL({ bracket });
+      updateURL({ bracket, page: 1 });
     }
   };
 
@@ -141,7 +248,8 @@ export const useProductFilters = (products: Product[]) => {
     setPriceBracketState('custom');
     setPriceMinState(min);
     setPriceMaxState(max);
-    updateURL({ bracket: 'custom', min, max });
+    setPageState(1);
+    updateURL({ bracket: 'custom', min, max, page: 1 });
   };
 
   const toggleBadge = (badge: string) => {
@@ -149,7 +257,13 @@ export const useProductFilters = (products: Product[]) => {
       ? selectedBadges.filter((b) => b !== badge)
       : [...selectedBadges, badge];
     setSelectedBadgesState(updated);
-    updateURL({ badges: updated });
+    setPageState(1);
+    updateURL({ badges: updated, page: 1 });
+  };
+
+  const setPage = (newPage: number) => {
+    setPageState(newPage);
+    updateURL({ page: newPage });
   };
 
   const resetFilters = () => {
@@ -159,75 +273,12 @@ export const useProductFilters = (products: Product[]) => {
     setSelectedBadgesState([]);
     setPriceMinState(null);
     setPriceMaxState(null);
+    setPageState(1);
+
     const nextParams = new URLSearchParams();
     if (activeCat) nextParams.set('cat', activeCat);
     setSearchParams(nextParams, { replace: true });
   };
-
-  // Derive unique badges with count
-  const availableBadges = useMemo(() => {
-    const counts: Record<string, number> = {};
-    products.forEach((p) => {
-      // filter by current category if not all
-      if (activeCat !== 'all' && p.cat !== activeCat) return;
-      if (p.badge) {
-        counts[p.badge] = (counts[p.badge] || 0) + 1;
-      }
-    });
-
-    return Object.entries(counts)
-      .map(([badge, count]) => ({ badge, count }))
-      .sort((a, b) => b.count - a.count);
-  }, [products, activeCat]);
-
-  // Filter and Sort algorithm
-  const filteredProducts = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
-
-    return products
-      .filter((item) => {
-        // 1. Category check
-        if (activeCat !== 'all' && item.cat !== activeCat) {
-          return false;
-        }
-
-        // 2. Keyword query match
-        if (q) {
-          const matchName = item.name.toLowerCase().includes(q);
-          const matchMaker = item.maker.toLowerCase().includes(q);
-          const matchBadge = (item.badge || '').toLowerCase().includes(q);
-          const matchDesc = (item.desc || '').toLowerCase().includes(q);
-          const matchCat = (item.cat || '').toLowerCase().includes(q);
-          if (!matchName && !matchMaker && !matchBadge && !matchDesc && !matchCat) {
-            return false;
-          }
-        }
-
-        // 3. Badges multi-select match (match any selected)
-        if (selectedBadges.length > 0) {
-          if (!selectedBadges.includes(item.badge)) {
-            return false;
-          }
-        }
-
-        // 4. Price range match
-        if (priceMin !== null && item.price < priceMin) {
-          return false;
-        }
-        if (priceMax !== null && item.price > priceMax) {
-          return false;
-        }
-
-        return true;
-      })
-      .sort((a, b) => {
-        if (sortBy === 'price_asc') return a.price - b.price;
-        if (sortBy === 'price_desc') return b.price - a.price;
-        if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
-        if (sortBy === 'maker_asc') return a.maker.localeCompare(b.maker);
-        return 0; // Curated order
-      });
-  }, [products, activeCat, searchQuery, selectedBadges, priceMin, priceMax, sortBy]);
 
   const hasActiveFilters = Boolean(
     searchQuery.trim() ||
@@ -253,10 +304,13 @@ export const useProductFilters = (products: Product[]) => {
     priceMax,
     setCustomRange,
     resetFilters,
-    filteredProducts,
-    totalCount: products.length,
-    filteredCount: filteredProducts.length,
+    filteredProducts: serverProducts,
+    totalCount,
+    filteredCount,
     availableBadges,
     hasActiveFilters,
+    pagination,
+    setPage,
+    isLoading,
   };
 };

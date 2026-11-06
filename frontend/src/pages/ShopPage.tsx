@@ -6,6 +6,7 @@ import { ProductCard } from '../features/products/ProductCard';
 import { ProductDetailModal } from '../features/products/ProductDetailModal';
 import { ShopFilterBar } from '../features/products/ShopFilterBar';
 import { ShopEmptyState } from '../features/products/ShopEmptyState';
+import { ShopPagination } from '../features/products/ShopPagination';
 import { useProductFilters } from '../features/products/useProductFilters';
 import { useCart } from '../features/cart/CartContext';
 import { Product, CraftCategory } from '../types';
@@ -34,10 +35,20 @@ export const ShopPage: React.FC = () => {
     filteredCount,
     availableBadges,
     hasActiveFilters,
+    pagination,
+    setPage,
+    isLoading,
   } = useProductFilters(products);
 
   const gridRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    if (gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,32 +61,30 @@ export const ShopPage: React.FC = () => {
     };
   }, []);
 
-  // GSAP stagger animation whenever filtered product list changes
+  // Stagger animation on products render & filter changes
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
+    if (!gridRef.current) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || !gridRef.current) return;
-
     const cards = gridRef.current.querySelectorAll('.product-card');
     if (cards.length > 0) {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.65,
-          stagger: 0.035,
-          ease: 'power3.out',
-          overwrite: true,
-        }
-      );
+      if (reduced) {
+        gsap.set(cards, { opacity: 1, y: 0 });
+      } else {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 18 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.03,
+            ease: 'power3.out',
+            overwrite: true,
+          }
+        );
+      }
     }
-  }, [activeCat, searchQuery, sortBy, priceBracket, selectedBadges, priceMin, priceMax]);
+  }, [activeCat, searchQuery, sortBy, priceBracket, selectedBadges, priceMin, priceMax, filteredProducts]);
 
   const currentCategory =
     catalog && activeCat !== 'all' ? catalog[activeCat as CraftCategory] : null;
@@ -126,15 +135,27 @@ export const ShopPage: React.FC = () => {
           {filteredProducts.length === 0 ? (
             <ShopEmptyState searchQuery={searchQuery} onReset={resetFilters} />
           ) : (
-            <div ref={gridRef} className="product-grid" id="productGrid" role="tabpanel">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onOpenDetails={(p) => setSelectedProduct(p)}
-                />
-              ))}
-            </div>
+            <>
+              <div
+                ref={gridRef}
+                className={`product-grid ${isLoading ? 'loading' : ''}`}
+                id="productGrid"
+                role="tabpanel"
+              >
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onOpenDetails={(p) => setSelectedProduct(p)}
+                  />
+                ))}
+              </div>
+
+              <ShopPagination
+                pagination={pagination}
+                onPageChange={handlePageChange}
+              />
+            </>
           )}
         </section>
       </main>

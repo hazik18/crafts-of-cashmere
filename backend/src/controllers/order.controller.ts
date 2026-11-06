@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import crypto from 'node:crypto';
 import { catalogRepository } from '../repositories/catalog.repository.js';
 import { ordersRepository } from '../repositories/orders.repository.js';
+import { isValidEmail } from '../validators/index.js';
 import { Order, OrderLineItem } from '../types/index.js';
 
 const uid = () => `${Date.now().toString(36)}${crypto.randomBytes(3).toString('hex')}`;
@@ -14,8 +15,13 @@ export class OrderController {
     const address = String(body.address || '').trim().slice(0, 600);
     const items = Array.isArray(body.items) ? body.items : [];
 
-    if (!name || !address || !items.length) {
-      res.status(400).json({ error: 'missing fields' });
+    if (!name || !address || !email || !items.length) {
+      res.status(400).json({ error: 'missing required fields' });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      res.status(400).json({ error: 'invalid email address' });
       return;
     }
 

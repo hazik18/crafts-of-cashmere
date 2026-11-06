@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import crypto from 'node:crypto';
 import { catalogRepository } from '../repositories/catalog.repository.js';
 import { sanitizeProductFields, isValidCategory } from '../validators/index.js';
+import { storageService } from '../services/storage.service.js';
 import { Product } from '../types/index.js';
 
 const uid = () => `${Date.now().toString(36)}${crypto.randomBytes(3).toString('hex')}`;
@@ -10,6 +11,32 @@ export class CatalogController {
   public static getCatalog(_req: Request, res: Response): void {
     const catalog = catalogRepository.getCatalog();
     res.json({ catalog });
+  }
+
+  public static getProducts(req: Request, res: Response): void {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 12;
+    const cat = (req.query.cat as string) || 'all';
+    const q = (req.query.q as string) || '';
+    const sort = (req.query.sort as string) || 'curated';
+    const min = req.query.min !== undefined && req.query.min !== '' ? Number(req.query.min) : undefined;
+    const max = req.query.max !== undefined && req.query.max !== '' ? Number(req.query.max) : undefined;
+    const badges = req.query.badges
+      ? (Array.isArray(req.query.badges) ? (req.query.badges as string[]) : (req.query.badges as string).split(',')).filter(Boolean)
+      : undefined;
+
+    const result = catalogRepository.getPaginatedProducts({
+      page,
+      limit,
+      cat,
+      q,
+      sort,
+      min,
+      max,
+      badges,
+    });
+
+    res.json(result);
   }
 
   public static async createProduct(req: Request, res: Response): Promise<void> {
@@ -71,11 +98,26 @@ export class CatalogController {
 
   public static async deleteProduct(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
-    const deleted = await catalogRepository.deleteProduct(id);
+    const deletedItem = await catalogRepository.deleteProduct(id);
 
-    if (!deleted) {
+    if (!deletedItem) {
       res.status(404).json({ error: 'not found' });
       return;
+    }
+
+    // Storage cleanup: delete associated uploaded or cloud images to prevent disk exhaustion
+    const imagesToPurge: string[] = [];
+    if (deletedItem.img) {
+      imagesToPurge.push(deletedItem.img);
+    }
+    if (Array.isArray(deletedItem.images)) {
+      imagesToPurge.push(...deletedItem.images);
+    }
+
+    if (imagesToPurge.length > 0) {
+      await storageService.deleteImages(imagesToPurge).catch((err) => {
+        console.error('Failed to clean up product images:', err);
+      });
     }
 
     res.json({ ok: true });

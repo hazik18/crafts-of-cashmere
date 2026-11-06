@@ -59,56 +59,13 @@ export const ShopFilterBar: React.FC<ShopFilterBarProps> = ({
     onCustomRangeChange(minVal, maxVal);
   };
 
-  const handleClearSearch = () => {
-    onSearchChange('');
-  };
-
   const categories = catalog
     ? (Object.entries(catalog) as [CraftCategory, { label: string }][])
     : [];
 
   return (
     <div className="shop-controls-wrapper">
-      {/* 1. Global Search Bar */}
-      <div className="shop-search-bar">
-        <div className="shop-search-input-wrap">
-          <svg
-            className="shop-search-icon"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
-          <input
-            type="search"
-            className="shop-search-input"
-            placeholder="Search by piece, artisan (e.g. Fatima Bano, Ghulam Nabi), weave, or material…"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            aria-label="Search catalog"
-          />
-          {searchQuery && (
-            <button
-              className="shop-search-clear"
-              onClick={handleClearSearch}
-              aria-label="Clear search"
-              type="button"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* 2. Craft Tabs (including All Crafts) */}
+      {/* 1. Craft Tabs (including All Crafts) */}
       <div className="shop-tabs" role="tablist" aria-label="Craft categories">
         <button
           className={`shop-tab ${activeCat === 'all' ? 'on' : ''}`}
@@ -233,6 +190,8 @@ export const ShopFilterBar: React.FC<ShopFilterBarProps> = ({
               <div className="shop-price-inputs">
                 <input
                   type="number"
+                  id="minPriceInput"
+                  name="minPrice"
                   min="0"
                   step="500"
                   placeholder="Min (₹)"
@@ -244,6 +203,8 @@ export const ShopFilterBar: React.FC<ShopFilterBarProps> = ({
                 <span className="shop-price-sep">to</span>
                 <input
                   type="number"
+                  id="maxPriceInput"
+                  name="maxPrice"
                   min="0"
                   step="500"
                   placeholder="Max (₹)"

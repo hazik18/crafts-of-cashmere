@@ -2,10 +2,13 @@ import fsp from 'node:fs/promises';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { v2 as cloudinary } from 'cloudinary';
 
 export interface IStorageService {
   saveImage(dataUrl: string, originalFilename?: string): Promise<{ path: string }>;
   saveImages(items: Array<{ data: string; filename?: string }>): Promise<{ paths: string[] }>;
+  deleteImage(pathOrUrl: string): Promise<boolean>;
+  deleteImages(pathsOrUrls: string[]): Promise<void>;
 }
 
 export class LocalStorageService implements IStorageService {
@@ -75,6 +78,134 @@ export class LocalStorageService implements IStorageService {
     );
     return { paths: results.map((r) => r.path) };
   }
+
+  public async deleteImage(pathOrUrl: string): Promise<boolean> {
+    if (!pathOrUrl || typeof pathOrUrl !== 'string') return false;
+
+    // Only delete uploaded files, not bundled static assets (e.g. images/pashmina/1.jpg)
+    if (!pathOrUrl.includes('images/uploads/')) {
+      return false;
+    }
+
+    try {
+      const filename = path.basename(pathOrUrl);
+      const targetPath = path.resolve(this.uploadDir, filename);
+
+      // Prevent directory traversal
+      if (!targetPath.startsWith(this.uploadDir)) {
+        return false;
+      }
+
+      if (fs.existsSync(targetPath)) {
+        await fsp.unlink(targetPath);
+        return true;
+      }
+    } catch (err) {
+      console.error(`Failed to delete local image ${pathOrUrl}:`, err);
+    }
+    return false;
+  }
+
+  public async deleteImages(pathsOrUrls: string[]): Promise<void> {
+    if (!Array.isArray(pathsOrUrls) || pathsOrUrls.length === 0) return;
+    await Promise.allSettled(pathsOrUrls.map((p) => this.deleteImage(p)));
+  }
 }
 
-export const storageService: IStorageService = new LocalStorageService();
+export class CloudinaryStorageService implements IStorageService {
+  constructor() {
+    if (process.env.CLOUDINARY_URL) {
+      cloudinary.config();
+    } else {
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true,
+      });
+    }
+  }
+
+  public async saveImage(dataUrl: string, originalFilename = 'photo'): Promise<{ path: string }> {
+    const match = dataUrl.match(/^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/);
+    if (!match) {
+      throw new Error('expected data URL (jpeg/png/webp)');
+    }
+
+    const cleanBase = originalFilename
+      .replace(/\.[^.]*$/, '')
+      .replace(/[^\w-]+/g, '-')
+      .slice(0, 40) || 'photo';
+
+    const uploadResult = await cloudinary.uploader.upload(dataUrl, {
+      folder: 'crafts-of-cashmere',
+      public_id: `${Date.now().toString(36)}-${cleanBase}`,
+      resource_type: 'image',
+    });
+
+    return { path: uploadResult.secure_url };
+  }
+
+  public async saveImages(
+    items: Array<{ data: string; filename?: string }>
+  ): Promise<{ paths: string[] }> {
+    if (!items.length) return { paths: [] };
+    if (items.length > 20) throw new Error('max 20 images per batch');
+
+    const results = await Promise.all(
+      items.map((item) => this.saveImage(item.data, item.filename || 'photo'))
+    );
+    return { paths: results.map((r) => r.path) };
+  }
+
+  public async deleteImage(pathOrUrl: string): Promise<boolean> {
+    if (!pathOrUrl || typeof pathOrUrl !== 'string') return false;
+
+    // Cloudinary URL handling
+    if (pathOrUrl.includes('res.cloudinary.com')) {
+      try {
+        // Match path after /upload/(v1234/)? and before file extension
+        const match = pathOrUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z0-9]+$/);
+        const publicId = match ? match[1] : null;
+        if (publicId) {
+          await cloudinary.uploader.destroy(publicId);
+          return true;
+        }
+      } catch (err) {
+        console.error(`Failed to delete Cloudinary asset ${pathOrUrl}:`, err);
+        return false;
+      }
+    }
+
+    // Fallback: local uploaded file if migrating or mixed
+    if (pathOrUrl.includes('images/uploads/')) {
+      try {
+        const uploadDir = path.resolve(process.cwd(), 'uploads');
+        const filename = path.basename(pathOrUrl);
+        const targetPath = path.resolve(uploadDir, filename);
+        if (targetPath.startsWith(uploadDir) && fs.existsSync(targetPath)) {
+          await fsp.unlink(targetPath);
+          return true;
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    return false;
+  }
+
+  public async deleteImages(pathsOrUrls: string[]): Promise<void> {
+    if (!Array.isArray(pathsOrUrls) || pathsOrUrls.length === 0) return;
+    await Promise.allSettled(pathsOrUrls.map((p) => this.deleteImage(p)));
+  }
+}
+
+const isCloudinaryConfigured = Boolean(
+  process.env.CLOUDINARY_URL ||
+  (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET)
+);
+
+export const storageService: IStorageService = isCloudinaryConfigured
+  ? new CloudinaryStorageService()
+  : new LocalStorageService();

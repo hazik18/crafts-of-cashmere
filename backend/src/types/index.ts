@@ -16,6 +16,13 @@ export interface Product {
   images?: string[];      // ordered gallery of additional photo paths
   stock?: number;         // 1 = single piece heirloom, 0 = woven to order
   leadTimeWeeks?: number; // used when stock === 0
+  dimensions?: string;
+  weight?: string;
+  materials?: string;
+  technique?: string;
+  origin?: string;
+  loomTime?: string;
+  careGuide?: string;
 }
 
 export interface CategoryCatalog {
@@ -79,4 +86,37 @@ export interface UpdateProductDTO {
   images?: string[];
   stock?: number;
   leadTimeWeeks?: number;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface AvailableBadge {
+  badge: string;
+  count: number;
+}
+
+export interface PaginatedProductsResponse {
+  products: Product[];
+  pagination: PaginationInfo;
+  availableBadges: AvailableBadge[];
+  totalCount: number;
+  filteredCount: number;
+}
+
+export interface ProductQueryParams {
+  page?: number;
+  limit?: number;
+  cat?: string;
+  q?: string;
+  sort?: string;
+  min?: number;
+  max?: number;
+  badges?: string[];
 }

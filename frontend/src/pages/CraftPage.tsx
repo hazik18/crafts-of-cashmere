@@ -21,7 +21,14 @@ export const CraftPage: React.FC = () => {
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
+    if (reduced) {
+      gsap.set(['.craft-row', '.atelier-motif', '.atelier-credit', '.atelier-body', '.q-line'], {
+        opacity: 1,
+        y: 0,
+        yPercent: 0,
+      });
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {

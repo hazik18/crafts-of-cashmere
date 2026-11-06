@@ -38,7 +38,7 @@ export const CartDrawer: React.FC = () => {
         onClick={closeCart}
       />
 
-      <aside className="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+      <aside className="cart-drawer" id="cartDrawer" aria-label="Shopping cart" data-lenis-prevent="true" onWheel={(e) => e.stopPropagation()}>
         <div className="cart-head">
           <h3>Your Cart</h3>
           <button className="cart-close" id="cartClose" aria-label="Close cart" onClick={closeCart}>

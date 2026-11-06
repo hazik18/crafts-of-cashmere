@@ -31,6 +31,17 @@ export function isValidEmail(email: unknown): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+export function isValidImagePath(val: unknown): boolean {
+  if (typeof val !== 'string') return false;
+  const trimmed = val.trim();
+  if (trimmed.includes('..')) return false;
+  // Local image path (e.g. images/uploads/... or images/pashmina/...)
+  if (/^images\/[\w./-]+$/.test(trimmed)) return true;
+  // Cloudinary URL (e.g. https://res.cloudinary.com/cloud_name/image/upload/...)
+  if (/^https:\/\/res\.cloudinary\.com\/[\w./-]+$/.test(trimmed)) return true;
+  return false;
+}
+
 export function sanitizeProductFields(body: Record<string, unknown>): Partial<Product> {
   const out: Partial<Product> = {};
 
@@ -63,7 +74,7 @@ export function sanitizeProductFields(body: Record<string, unknown>): Partial<Pr
 
   if (typeof body.img === 'string') {
     const img = body.img.trim();
-    if (/^images\/[\w./-]+$/.test(img) && !img.includes('..')) {
+    if (isValidImagePath(img)) {
       out.img = img;
       out.motif = null;
     }
@@ -83,7 +94,7 @@ export function sanitizeProductFields(body: Record<string, unknown>): Partial<Pr
     const safe = (body.images as unknown[])
       .filter((p): p is string => typeof p === 'string')
       .map((p) => p.trim())
-      .filter((p) => /^images\/[\w./-]+$/.test(p) && !p.includes('..'));
+      .filter((p) => isValidImagePath(p));
     out.images = safe;
   }
 

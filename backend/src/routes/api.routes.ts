@@ -11,6 +11,7 @@ const router = Router();
 
 /* Public Routes */
 router.get('/catalog', CatalogController.getCatalog);
+router.get('/products', CatalogController.getProducts);
 router.post('/login', loginRateLimiter, AuthController.login);
 router.post('/subscribe', SubscriberController.subscribe);
 router.post('/orders', OrderController.createOrder);

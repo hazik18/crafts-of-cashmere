@@ -23,7 +23,26 @@ export const HomePage: React.FC = () => {
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
+    if (reduced) {
+      gsap.set(
+        [
+          '.hero-line span',
+          '.hero-eyebrow',
+          '.hero-ornament',
+          '.hero-sub',
+          '.hero-cta',
+          '.hero-assure',
+          '.collection-card',
+          '.craft-row',
+          '.atelier-motif',
+          '.atelier-credit',
+          '.atelier-body',
+          '.newsletter-inner > *',
+        ],
+        { opacity: 1, y: 0, yPercent: 0, scale: 1 }
+      );
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
@@ -399,6 +418,7 @@ export const HomePage: React.FC = () => {
                 <input
                   type="email"
                   id="nlEmail"
+                  name="email"
                   placeholder="Your email address"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}

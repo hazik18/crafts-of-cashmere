@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useCart, formatINR } from '../features/cart/CartContext';
 import { useToast } from '../components/ToastContext';
@@ -24,6 +25,7 @@ const makeUid = () => `photo-${++_uid}`;
 
 /* ─── Component ─────────────────────────────────────────────────────────── */
 export const AdminPage: React.FC = () => {
+  const navigate = useNavigate();
   const [adminKey, setAdminKey] = useState<string>(() => sessionStorage.getItem(KEY_STORE) || '');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [inputKey, setInputKey] = useState<string>('');
@@ -95,6 +97,8 @@ export const AdminPage: React.FC = () => {
     sessionStorage.removeItem(KEY_STORE);
     setIsAuthenticated(false);
     setInputKey('');
+    showToast('Signed out of Atelier Admin.');
+    navigate('/');
   };
 
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -333,6 +337,11 @@ export const AdminPage: React.FC = () => {
             <p className={`login-error ${loginError ? 'on' : ''}`} id="loginError">
               That key is not recognised.
             </p>
+            <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+              <Link to="/" style={{ fontSize: '0.8125rem', color: 'var(--ink-mute)', textDecoration: 'none' }}>
+                ← Return to Storefront
+              </Link>
+            </div>
           </form>
         </div>
       ) : (

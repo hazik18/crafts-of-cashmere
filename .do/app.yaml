@@ -1,0 +1,38 @@
+name: crafts-of-cashmere
+region: nyc
+
+services:
+  # Node.js + Express Backend API
+  - name: backend
+    source_dir: backend
+    environment_slug: node-js
+    build_command: npm install && npm run build
+    run_command: npm run start
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /api
+      - path: /images/uploads
+    envs:
+      - key: PORT
+        value: "8080"
+      - key: ADMIN_KEY
+        value: "cashmere-admin-test"
+      - key: NODE_ENV
+        value: "production"
+
+static_sites:
+  # Vite React SPA Storefront
+  - name: frontend
+    source_dir: frontend
+    environment_slug: html
+    build_command: npm install && npm run build
+    output_dir: dist
+    catchall_document: index.html
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_BASE_URL
+        value: ""
+

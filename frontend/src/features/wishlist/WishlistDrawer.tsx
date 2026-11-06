@@ -56,6 +56,8 @@ export const WishlistDrawer: React.FC = () => {
         className={`wishlist-drawer ${isWishlistOpen ? 'open' : ''}`}
         id="wishlistDrawer"
         aria-label="Saved Heirlooms"
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
       >
         <div className="wishlist-head">
           <div className="wishlist-head-title">

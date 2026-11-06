@@ -1,4 +1,4 @@
-import { Catalog, Order, Product, Subscriber } from '../types';
+import { Catalog, Order, Product, Subscriber, PaginatedProductsResponse, ProductQueryParams } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -23,6 +23,21 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   async getCatalog(): Promise<{ catalog: Catalog }> {
     return request<{ catalog: Catalog }>('/api/catalog');
+  },
+
+  async getProducts(params: ProductQueryParams = {}): Promise<PaginatedProductsResponse> {
+    const sp = new URLSearchParams();
+    if (params.page !== undefined && params.page !== null) sp.set('page', String(params.page));
+    if (params.limit !== undefined && params.limit !== null) sp.set('limit', String(params.limit));
+    if (params.cat) sp.set('cat', params.cat);
+    if (params.q && params.q.trim()) sp.set('q', params.q.trim());
+    if (params.sort && params.sort !== 'curated') sp.set('sort', params.sort);
+    if (params.badges && params.badges.length > 0) sp.set('badges', params.badges.join(','));
+    if (params.min !== undefined && params.min !== null && !isNaN(params.min)) sp.set('min', String(params.min));
+    if (params.max !== undefined && params.max !== null && !isNaN(params.max)) sp.set('max', String(params.max));
+
+    const qs = sp.toString();
+    return request<PaginatedProductsResponse>(`/api/products${qs ? `?${qs}` : ''}`);
   },
 
   async login(key: string): Promise<{ ok: boolean }> {
